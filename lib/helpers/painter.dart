@@ -4,31 +4,52 @@ import 'dart:math';
 class Painter extends CustomPainter{
 
   final double screenWidth;
-  final double curveHeight = 81.0;
+  final double curveHeight = 75.0;
 
   Painter(this.screenWidth);
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-        ..color = /*Color.fromRGBO(111, 189, 241, 0.68)*/ Colors.black
-        ..style = PaintingStyle.fill;
-
-    var firstCurve = Path();
-
-    int amplitude = 10;
-    int frequency = 30;
-
+  void createSinWave(Path path, Paint paint, Canvas canvas, int amplitude, int frequency){
     double x = 0;
     double y = 0;
 
+    path.moveTo(x, y);
+
     while(x<screenWidth){
+      path.addRect(Rect.fromLTWH(x, y, 1.0, curveHeight-y));
       y = curveHeight/2+amplitude*sin(x/frequency);
-      firstCurve.lineTo(x, y);
       x=x+1;
     }
 
-    canvas.drawPath(firstCurve, paint);
+
+    canvas.drawPath(path, paint);
+  }
+
+  void createCosWave(Path path, Paint paint, Canvas canvas, int amplitude, int frequency){
+    double x = 0;
+    double y = 0;
+
+    path.moveTo(x, y);
+
+    while(x<screenWidth){
+      path.addRect(Rect.fromLTWH(x, y, 1.0, curveHeight-y));
+      y = curveHeight/2+amplitude*cos(x/frequency);
+      x=x+1;
+    }
+
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var painter = Paint()
+        ..color = Color.fromRGBO(111, 189, 241, 0.68)
+        ..style = PaintingStyle.fill;
+
+    createSinWave(Path(), painter, canvas, 20, 40);
+    createCosWave(Path(), painter, canvas, 15, 35);
+
+
   }
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
